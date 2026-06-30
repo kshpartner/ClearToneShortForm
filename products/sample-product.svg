@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800" role="img" aria-label="Sample product">
+  <rect width="800" height="800" fill="#f6f8fb"/>
+  <circle cx="214" cy="172" r="88" fill="#dbeafe"/>
+  <circle cx="614" cy="642" r="124" fill="#ccfbf1"/>
+  <rect x="284" y="140" width="232" height="520" rx="42" fill="#ffffff" stroke="#d7dde8" stroke-width="10"/>
+  <rect x="318" y="226" width="164" height="156" rx="22" fill="#eff6ff"/>
+  <path d="M348 440h104" stroke="#2563eb" stroke-width="18" stroke-linecap="round"/>
+  <path d="M348 492h92" stroke="#0e9f8f" stroke-width="18" stroke-linecap="round"/>
+  <path d="M348 544h70" stroke="#94a3b8" stroke-width="18" stroke-linecap="round"/>
+  <text x="400" y="316" fill="#2563eb" font-family="Arial, sans-serif" font-size="56" font-weight="700" text-anchor="middle">CT</text>
+</svg>

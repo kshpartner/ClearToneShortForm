@@ -6,6 +6,8 @@
     path: document.querySelector("#dataPath"),
     embedUrl: document.querySelector("#embedUrl"),
     image: document.querySelector("#image"),
+    productUpload: document.querySelector("#productUpload"),
+    productLabel: document.querySelector("#productLabel"),
     productUrl: document.querySelector("#productUrl"),
     brand: document.querySelector("#brand"),
     title: document.querySelector("#title"),
@@ -15,22 +17,28 @@
   const itemList = document.querySelector("#itemList");
   const statusText = document.querySelector("#statusText");
   const previewFrame = document.querySelector("#previewFrame");
+  const previewStage = document.querySelector("#previewStage");
   const buttons = {
     load: document.querySelector("#loadButton"),
     save: document.querySelector("#saveButton"),
     add: document.querySelector("#addButton"),
     delete: document.querySelector("#deleteButton"),
     apply: document.querySelector("#applyButton"),
-    preview: document.querySelector("#previewButton")
+    preview: document.querySelector("#previewButton"),
+    upload: document.querySelector("#uploadButton"),
+    desktop: document.querySelector("#desktopPreviewButton"),
+    mobile: document.querySelector("#mobilePreviewButton")
   };
 
-  let items = cloneItems(window.CLEAR_TONE_SHORTFORMS || []);
+  let items = clone(window.CLEAR_TONE_SHORTFORMS || []);
+  let products = clone(window.CLEAR_TONE_PRODUCTS || []);
   let selectedIndex = 0;
-  let contentSha = "";
+  let dataSha = "";
+  let manifestSha = "";
 
   fields.token.value = sessionStorage.getItem("clearToneGithubToken") || "";
 
-  function cloneItems(value) {
+  function clone(value) {
     return JSON.parse(JSON.stringify(value));
   }
 
@@ -40,6 +48,24 @@
 
   function selectedItem() {
     return items[selectedIndex] || null;
+  }
+
+  function renderProducts() {
+    const current = fields.image.value;
+    const options = [
+      '<option value="">이미지 없음</option>',
+      ...products.map((product) => (
+        `<option value="${escapeHtml(product.name)}">${escapeHtml(product.label || product.name)} (${escapeHtml(product.name)})</option>`
+      ))
+    ];
+
+    fields.image.innerHTML = options.join("");
+
+    if (current && !products.some((product) => product.name === current)) {
+      fields.image.insertAdjacentHTML("beforeend", `<option value="${escapeHtml(current)}">${escapeHtml(current)}</option>`);
+    }
+
+    fields.image.value = current || "";
   }
 
   function renderList() {
@@ -55,6 +81,7 @@
     const item = selectedItem();
     fields.embedUrl.value = item?.embedUrl || "";
     fields.image.value = item?.image || "";
+    renderProducts();
     fields.productUrl.value = item?.productUrl || "";
     fields.brand.value = item?.brand || "";
     fields.title.value = item?.title || "";
@@ -106,15 +133,21 @@
 
   async function loadFromGithub() {
     const config = readConfig();
-    const data = await githubRequest(
-      `https://api.github.com/repos/${config.repo}/contents/${config.path}?ref=${encodeURIComponent(config.branch)}`,
-      { method: "GET" },
-      config.token
-    );
+    const data = await fetchContent(config, config.path);
+    dataSha = data.sha;
+    items = parseAssignmentFile(decodeBase64(data.content), "CLEAR_TONE_SHORTFORMS");
 
-    contentSha = data.sha;
-    items = parseDataFile(decodeBase64(data.content));
+    try {
+      const manifest = await fetchContent(config, "products/manifest.js");
+      manifestSha = manifest.sha;
+      products = parseAssignmentFile(decodeBase64(manifest.content), "CLEAR_TONE_PRODUCTS");
+    } catch (error) {
+      manifestSha = "";
+      products = [];
+    }
+
     selectedIndex = 0;
+    renderProducts();
     renderList();
     renderForm();
     refreshPreview();
@@ -124,24 +157,10 @@
   async function saveToGithub() {
     applyForm();
     const config = readConfig();
-    let sha = contentSha;
-
-    if (!sha) {
-      try {
-        const current = await githubRequest(
-          `https://api.github.com/repos/${config.repo}/contents/${config.path}?ref=${encodeURIComponent(config.branch)}`,
-          { method: "GET" },
-          config.token
-        );
-        sha = current.sha;
-      } catch (error) {
-        sha = "";
-      }
-    }
-
+    const sha = dataSha || await getContentSha(config, config.path);
     const payload = {
       message: "Update shortform data",
-      content: encodeBase64(formatDataFile(items)),
+      content: encodeBase64(formatAssignmentFile("CLEAR_TONE_SHORTFORMS", items)),
       branch: config.branch
     };
 
@@ -157,8 +176,96 @@
       config.token
     );
 
-    contentSha = result.content.sha;
+    dataSha = result.content.sha;
     setStatus("GitHub에 저장했습니다. Pages 반영까지 잠시 걸릴 수 있습니다.");
+  }
+
+  async function uploadProductImage() {
+    const file = fields.productUpload.files[0];
+    if (!file) {
+      setStatus("업로드할 제품 이미지를 선택해주세요.");
+      return;
+    }
+
+    const config = readConfig();
+    const fileName = sanitizeFileName(file.name);
+    const label = fields.productLabel.value.trim() || fileName.replace(/\.[^.]+$/, "");
+    const path = `products/${fileName}`;
+    const content = await readFileAsBase64(file);
+    const sha = await getContentSha(config, path);
+
+    const payload = {
+      message: `Upload product image ${fileName}`,
+      content,
+      branch: config.branch
+    };
+
+    if (sha) payload.sha = sha;
+
+    await githubRequest(
+      `https://api.github.com/repos/${config.repo}/contents/${path}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      },
+      config.token
+    );
+
+    products = [
+      { name: fileName, label },
+      ...products.filter((product) => product.name !== fileName)
+    ].sort((a, b) => (a.label || a.name).localeCompare(b.label || b.name));
+
+    await saveProductManifest(config);
+
+    fields.image.value = fileName;
+    renderProducts();
+    fields.image.value = fileName;
+    applyForm();
+    fields.productUpload.value = "";
+    fields.productLabel.value = "";
+    setStatus("제품 이미지를 업로드하고 목록에 추가했습니다.");
+  }
+
+  async function saveProductManifest(config) {
+    const sha = manifestSha || await getContentSha(config, "products/manifest.js");
+    const payload = {
+      message: "Update product image manifest",
+      content: encodeBase64(formatAssignmentFile("CLEAR_TONE_PRODUCTS", products)),
+      branch: config.branch
+    };
+
+    if (sha) payload.sha = sha;
+
+    const result = await githubRequest(
+      `https://api.github.com/repos/${config.repo}/contents/products/manifest.js`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      },
+      config.token
+    );
+
+    manifestSha = result.content.sha;
+  }
+
+  async function fetchContent(config, path) {
+    return githubRequest(
+      `https://api.github.com/repos/${config.repo}/contents/${path}?ref=${encodeURIComponent(config.branch)}`,
+      { method: "GET" },
+      config.token
+    );
+  }
+
+  async function getContentSha(config, path) {
+    try {
+      const content = await fetchContent(config, path);
+      return content.sha;
+    } catch (error) {
+      return "";
+    }
   }
 
   function readConfig() {
@@ -193,9 +300,10 @@
     return response.json();
   }
 
-  function parseDataFile(source) {
-    const match = source.match(/window\.CLEAR_TONE_SHORTFORMS\s*=\s*(\[[\s\S]*\]);?\s*$/);
-    if (!match) throw new Error("js/data.js 형식을 읽을 수 없습니다.");
+  function parseAssignmentFile(source, variableName) {
+    const pattern = new RegExp(`window\\.${variableName}\\s*=\\s*(\\[[\\s\\S]*\\]);?\\s*$`);
+    const match = source.match(pattern);
+    if (!match) throw new Error(`${variableName} 형식을 읽을 수 없습니다.`);
     try {
       return JSON.parse(match[1]);
     } catch (error) {
@@ -203,20 +311,23 @@
     }
   }
 
-  function formatDataFile(value) {
-    return `window.CLEAR_TONE_SHORTFORMS = ${JSON.stringify(value, null, 2)};\n`;
+  function formatAssignmentFile(variableName, value) {
+    return `window.${variableName} = ${JSON.stringify(value, null, 2)};\n`;
   }
 
   function refreshPreview() {
+    const baseHref = new URL("./", window.location.href).href;
     const html = `<!doctype html>
 <html lang="ko">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <base href="${baseHref}">
   <link rel="stylesheet" href="./css/styles.css">
 </head>
 <body class="embed-body">
   <main class="embed-page" id="embedPage"></main>
+  <script>window.CLEAR_TONE_PRODUCTS = ${JSON.stringify(products)};<\/script>
   <script>window.CLEAR_TONE_SHORTFORMS = ${JSON.stringify(items)};<\/script>
   <script src="./js/embed.js"><\/script>
 </body>
@@ -225,8 +336,34 @@
     previewFrame.srcdoc = html;
   }
 
+  function setPreviewMode(mode) {
+    const isMobile = mode === "mobile";
+    previewStage.classList.toggle("is-mobile", isMobile);
+    previewStage.classList.toggle("is-desktop", !isMobile);
+    buttons.mobile.classList.toggle("is-active", isMobile);
+    buttons.desktop.classList.toggle("is-active", !isMobile);
+  }
+
   function createId() {
     return `item-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+  }
+
+  function sanitizeFileName(value) {
+    const cleaned = String(value || "product")
+      .toLowerCase()
+      .replace(/[^a-z0-9._-]+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
+    return cleaned || `product-${Date.now()}.png`;
+  }
+
+  function readFileAsBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result).split(",")[1] || "");
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(file);
+    });
   }
 
   function encodeBase64(value) {
@@ -255,13 +392,23 @@
     renderForm();
   });
 
+  fields.image.addEventListener("change", applyForm);
   buttons.apply.addEventListener("click", applyForm);
   buttons.add.addEventListener("click", addItem);
   buttons.delete.addEventListener("click", deleteItem);
+  buttons.upload.addEventListener("click", async () => {
+    try {
+      await uploadProductImage();
+    } catch (error) {
+      setStatus(error.message);
+    }
+  });
   buttons.preview.addEventListener("click", () => {
     applyForm();
     setStatus("미리보기를 새로고침했습니다.");
   });
+  buttons.desktop.addEventListener("click", () => setPreviewMode("desktop"));
+  buttons.mobile.addEventListener("click", () => setPreviewMode("mobile"));
 
   buttons.load.addEventListener("click", async () => {
     try {
@@ -279,6 +426,7 @@
     }
   });
 
+  renderProducts();
   renderList();
   renderForm();
   refreshPreview();

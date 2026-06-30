@@ -2,7 +2,7 @@ window.CLEAR_TONE_SHORTFORMS = [
   {
     id: "original",
     embedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=480&q=80",
+    image: "sample-product.svg",
     productUrl: "https://example.com/products/original",
     brand: "링티 오리지널",
     title: "수분을 효과적으로 회복",
@@ -11,7 +11,7 @@ window.CLEAR_TONE_SHORTFORMS = [
   {
     id: "kids",
     embedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    image: "https://images.unsplash.com/photo-1583947581924-a6d19d90d3ed?auto=format&fit=crop&w=480&q=80",
+    image: "sample-product.svg",
     productUrl: "https://example.com/products/kids",
     brand: "링티 아이",
     title: "아이를 위한 수분 솔루션",

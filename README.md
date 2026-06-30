@@ -35,12 +35,14 @@
 
 토큰은 브라우저 세션에만 저장되며 저장소 파일에는 기록되지 않습니다.
 
+제품 이미지는 `products/` 폴더에 저장됩니다. 관리자에서 이미지를 업로드하면 파일이 `products/파일명`으로 올라가고, `products/manifest.js`가 갱신되어 드롭다운에서 제품명으로 선택할 수 있습니다.
+
 ## 카드 데이터
 
 각 카드에는 아래 값이 들어갑니다.
 
 - `embedUrl`: YouTube watch, shorts, youtu.be, embed URL 또는 일반 iframe URL
-- `image`: 제품 이미지 URL, 비워두면 이미지 없는 카드로 표시
+- `image`: `products/` 폴더 안의 제품 이미지 파일명, 비워두면 이미지 없는 카드로 표시
 - `productUrl`: CTA 클릭 시 이동할 제품 페이지 URL
 - `brand`: 브랜드명
 - `title`: 카드 제목

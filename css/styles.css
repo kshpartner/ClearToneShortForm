@@ -198,6 +198,7 @@ label,
 }
 
 input,
+select,
 textarea {
   background: #fff;
   border: 1px solid var(--line);
@@ -288,6 +289,7 @@ textarea {
   gap: clamp(14px, 2vw, 22px);
   grid-auto-columns: clamp(260px, 30vw, 372px);
   grid-auto-flow: column;
+  min-width: 0;
   min-height: 0;
   overflow-x: auto;
   overscroll-behavior-x: contain;
@@ -370,7 +372,7 @@ textarea {
 }
 
 .story-product-main {
-  align-items: stretch;
+  align-items: center;
   display: grid;
   grid-template-columns: 82px minmax(0, 1fr);
   min-height: 96px;
@@ -380,9 +382,21 @@ textarea {
   grid-template-columns: 1fr;
 }
 
-.story-product-main img {
+.story-thumb {
+  align-items: center;
+  aspect-ratio: 1 / 1;
+  background: #fff;
+  display: flex;
   height: 100%;
-  object-fit: cover;
+  justify-content: center;
+  overflow: hidden;
+  width: 100%;
+}
+
+.story-thumb img {
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
   width: 100%;
 }
 
@@ -452,13 +466,26 @@ textarea {
 .admin-main {
   background: var(--soft);
   min-height: calc(100vh - 72px);
-  padding: 32px clamp(18px, 4vw, 48px);
+  padding: 18px;
 }
 
 .admin-layout {
   display: grid;
   gap: 22px;
   grid-template-columns: minmax(320px, 460px) minmax(0, 1fr);
+}
+
+.admin-workspace {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 360px 420px minmax(0, 1fr);
+  min-height: calc(100vh - 108px);
+}
+
+.admin-sidebar {
+  display: grid;
+  gap: 16px;
+  min-height: 0;
 }
 
 .admin-panel {
@@ -480,6 +507,17 @@ textarea {
 .item-form {
   display: grid;
   gap: 12px;
+}
+
+.editor-panel {
+  align-self: start;
+}
+
+.upload-row {
+  align-items: end;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
 }
 
 .admin-actions,
@@ -545,6 +583,89 @@ textarea {
   width: 100%;
 }
 
+.admin-preview-panel {
+  background: #e8edf4;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.preview-toolbar {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  min-height: 54px;
+  padding: 0 14px;
+}
+
+.preview-toolbar strong {
+  font-size: 14px;
+}
+
+.preview-switch {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.icon-button {
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  height: 38px;
+  justify-content: center;
+  width: 42px;
+}
+
+.icon-button.is-active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+
+.icon-button svg {
+  fill: none;
+  height: 20px;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+  width: 20px;
+}
+
+.preview-stage {
+  align-items: stretch;
+  display: flex;
+  justify-content: center;
+  min-height: 0;
+  overflow: auto;
+  padding: 16px;
+}
+
+.preview-stage iframe {
+  background: #fff;
+  border: 0;
+  border-radius: 14px;
+  box-shadow: 0 18px 40px rgba(23, 25, 31, 0.18);
+  height: 100%;
+  min-height: 620px;
+  width: 100%;
+}
+
+.preview-stage.is-mobile iframe {
+  max-width: 430px;
+  min-height: 760px;
+  width: min(100%, 430px);
+}
+
 @media (max-width: 920px) {
   .site-header {
     align-items: flex-start;
@@ -571,8 +692,25 @@ textarea {
   }
 
   .embed-tools,
-  .admin-layout {
+  .admin-layout,
+  .admin-workspace {
     grid-template-columns: 1fr;
+  }
+
+  .admin-main {
+    padding: 14px;
+  }
+
+  .admin-workspace {
+    min-height: 0;
+  }
+
+  .upload-row {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-stage {
+    min-height: 640px;
   }
 }
 
@@ -588,20 +726,22 @@ textarea {
 
   .shortform-rail {
     align-content: start;
-    display: grid;
+    display: flex;
+    flex-wrap: wrap;
     gap: 12px;
-    grid-auto-columns: auto;
-    grid-auto-flow: row;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
     overflow-x: hidden;
     overflow-y: auto;
     padding-bottom: 8px;
     scroll-snap-type: none;
+    width: 100%;
   }
 
   .story-card {
     border-radius: 18px;
+    flex: 0 0 calc((100% - 12px) / 2);
+    min-width: 0;
     scroll-snap-align: none;
+    width: calc((100% - 12px) / 2);
   }
 
   .story-product {
@@ -641,7 +781,7 @@ textarea {
   }
 
   .admin-main {
-    padding: 16px 12px;
+    padding: 12px;
   }
 
   .admin-panel {

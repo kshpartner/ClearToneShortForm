@@ -20,51 +20,67 @@
     </header>
 
     <main class="admin-main">
-      <div class="admin-layout">
-        <section class="admin-panel">
-          <h1>GitHub 저장 설정</h1>
-          <div class="settings-grid">
-            <label>
-              GitHub Token
-              <input id="githubToken" type="password" autocomplete="off" placeholder="ghp_...">
-            </label>
-            <label>
-              저장소
-              <input id="repoFullName" type="text" value="kshpartner/ClearToneShortForm">
-            </label>
-            <label>
-              브랜치
-              <input id="repoBranch" type="text" value="main">
-            </label>
-            <label>
-              데이터 파일
-              <input id="dataPath" type="text" value="js/data.js">
-            </label>
-          </div>
-          <div class="admin-actions">
-            <button class="button secondary" id="loadButton" type="button">GitHub에서 불러오기</button>
-            <button class="button" id="saveButton" type="button">GitHub에 저장</button>
-          </div>
-          <p class="admin-status" id="statusText">토큰은 브라우저 세션에만 저장됩니다.</p>
+      <div class="admin-workspace">
+        <aside class="admin-sidebar">
+          <section class="admin-panel">
+            <h1>GitHub 저장 설정</h1>
+            <div class="settings-grid">
+              <label>
+                GitHub Token
+                <input id="githubToken" type="password" autocomplete="off" placeholder="ghp_...">
+              </label>
+              <label>
+                저장소
+                <input id="repoFullName" type="text" value="kshpartner/ClearToneShortForm">
+              </label>
+              <label>
+                브랜치
+                <input id="repoBranch" type="text" value="main">
+              </label>
+              <label>
+                데이터 파일
+                <input id="dataPath" type="text" value="js/data.js">
+              </label>
+            </div>
+            <div class="admin-actions">
+              <button class="button secondary" id="loadButton" type="button">GitHub에서 불러오기</button>
+              <button class="button" id="saveButton" type="button">GitHub에 저장</button>
+            </div>
+            <p class="admin-status" id="statusText">토큰은 브라우저 세션에만 저장됩니다.</p>
+          </section>
 
-          <div class="item-list" id="itemList"></div>
-          <div class="admin-actions">
-            <button class="button secondary" id="addButton" type="button">카드 추가</button>
-            <button class="button danger" id="deleteButton" type="button">선택 삭제</button>
-          </div>
-        </section>
+          <section class="admin-panel">
+            <h2>숏폼 카드</h2>
+            <div class="item-list" id="itemList"></div>
+            <div class="admin-actions">
+              <button class="button secondary" id="addButton" type="button">카드 추가</button>
+              <button class="button danger" id="deleteButton" type="button">선택 삭제</button>
+            </div>
+          </section>
+        </aside>
 
-        <section class="admin-panel">
-          <h2>숏폼 카드 편집</h2>
+        <section class="admin-panel editor-panel">
+          <h2>카드 편집</h2>
           <form class="item-form" id="itemForm">
             <label>
               임베드 주소
               <input id="embedUrl" type="url" placeholder="YouTube, Shorts, embed URL">
             </label>
             <label>
-              제품 이미지 URL 선택
-              <input id="image" type="url" placeholder="비워두면 이미지 없이 표시">
+              제품 이미지
+              <select id="image"></select>
             </label>
+            <div class="upload-row">
+              <label>
+                제품 이미지 업로드
+                <input id="productUpload" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+              </label>
+              <label>
+                제품명
+                <input id="productLabel" type="text" placeholder="예: 링티 오리지널">
+              </label>
+              <button class="button secondary" id="uploadButton" type="button">업로드</button>
+            </div>
             <label>
               제품 페이지 URL
               <input id="productUrl" type="url" placeholder="CTA 클릭 시 이동할 주소">
@@ -88,12 +104,26 @@
           </div>
         </section>
 
-        <section class="admin-panel admin-preview">
-          <iframe id="previewFrame" title="ClearTone iframe preview" src="./embed.html?preview=1"></iframe>
+        <section class="admin-preview-panel">
+          <div class="preview-toolbar">
+            <strong>반응형 미리보기</strong>
+            <div class="preview-switch" role="group" aria-label="미리보기 크기">
+              <button class="icon-button is-active" id="desktopPreviewButton" type="button" aria-label="PC 미리보기">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v10H4z"/><path d="M8 19h8"/><path d="M12 15v4"/></svg>
+              </button>
+              <button class="icon-button" id="mobilePreviewButton" type="button" aria-label="모바일 미리보기">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="3" width="8" height="18" rx="2"/><path d="M11 18h2"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="preview-stage is-desktop" id="previewStage">
+            <iframe id="previewFrame" title="ClearTone iframe preview" src="./embed.html?preview=1"></iframe>
+          </div>
         </section>
       </div>
     </main>
 
+    <script src="./products/manifest.js"></script>
     <script src="./js/data.js"></script>
     <script src="./js/admin.js"></script>
   </body>

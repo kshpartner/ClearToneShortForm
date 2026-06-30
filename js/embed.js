@@ -25,7 +25,8 @@
 
   function renderCard(item, index) {
     const source = normalizeEmbedUrl(item.embedUrl, autoplay && !preview, loop);
-    const hasImage = Boolean((item.image || "").trim());
+    const imageSource = resolveProductImage(item.image);
+    const hasImage = Boolean(imageSource);
     const hasProductUrl = Boolean((item.productUrl || "").trim());
 
     return `
@@ -48,7 +49,7 @@
         <div class="story-shade"></div>
         <div class="story-product">
           <div class="story-product-main ${hasImage ? "" : "no-image"}">
-            ${hasImage ? `<img src="${escapeAttr(item.image)}" alt="">` : ""}
+            ${hasImage ? `<div class="story-thumb"><img src="${escapeAttr(imageSource)}" alt=""></div>` : ""}
             <div class="story-copy">
               <span>${escapeHtml(item.brand || "ClearTone")}</span>
               <strong>${escapeHtml(item.title || "")}</strong>
@@ -114,6 +115,15 @@
     } catch (error) {
       return raw;
     }
+  }
+
+  function resolveProductImage(value) {
+    const raw = String(value || "").trim();
+    if (!raw) return "";
+    if (/^(https?:)?\/\//.test(raw) || raw.startsWith("/") || raw.startsWith("./") || raw.startsWith("../")) {
+      return raw;
+    }
+    return `./products/${raw}`;
   }
 
   function escapeHtml(value) {
