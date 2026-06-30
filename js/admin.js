@@ -6,6 +6,7 @@
     path: document.querySelector("#dataPath"),
     embedUrl: document.querySelector("#embedUrl"),
     image: document.querySelector("#image"),
+    productUrl: document.querySelector("#productUrl"),
     brand: document.querySelector("#brand"),
     title: document.querySelector("#title"),
     description: document.querySelector("#description")
@@ -54,6 +55,7 @@
     const item = selectedItem();
     fields.embedUrl.value = item?.embedUrl || "";
     fields.image.value = item?.image || "";
+    fields.productUrl.value = item?.productUrl || "";
     fields.brand.value = item?.brand || "";
     fields.title.value = item?.title || "";
     fields.description.value = item?.description || "";
@@ -65,6 +67,7 @@
       id: items[selectedIndex].id || createId(),
       embedUrl: fields.embedUrl.value.trim(),
       image: fields.image.value.trim(),
+      productUrl: fields.productUrl.value.trim(),
       brand: fields.brand.value.trim(),
       title: fields.title.value.trim(),
       description: fields.description.value.trim()
@@ -80,6 +83,7 @@
       id: createId(),
       embedUrl: "",
       image: "",
+      productUrl: "",
       brand: "",
       title: "",
       description: ""

@@ -26,6 +26,7 @@
   function renderCard(item, index) {
     const source = normalizeEmbedUrl(item.embedUrl, autoplay && !preview, loop);
     const hasImage = Boolean((item.image || "").trim());
+    const hasProductUrl = Boolean((item.productUrl || "").trim());
 
     return `
       <article class="story-card">
@@ -45,13 +46,21 @@
           `}
         </div>
         <div class="story-shade"></div>
-        <div class="story-product ${hasImage ? "" : "no-image"}">
-          ${hasImage ? `<img src="${escapeAttr(item.image)}" alt="">` : ""}
-          <div class="story-copy">
-            <span>${escapeHtml(item.brand || "ClearTone")}</span>
-            <strong>${escapeHtml(item.title || "")}</strong>
-            <p>${escapeHtml(item.description || "")}</p>
+        <div class="story-product">
+          <div class="story-product-main ${hasImage ? "" : "no-image"}">
+            ${hasImage ? `<img src="${escapeAttr(item.image)}" alt="">` : ""}
+            <div class="story-copy">
+              <span>${escapeHtml(item.brand || "ClearTone")}</span>
+              <strong>${escapeHtml(item.title || "")}</strong>
+              <p>${escapeHtml(item.description || "")}</p>
+            </div>
           </div>
+          ${hasProductUrl ? `
+            <a class="story-cta" href="${escapeAttr(item.productUrl)}" target="_blank" rel="noopener">
+              제품 보러가기
+              <span aria-hidden="true">↗</span>
+            </a>
+          ` : ""}
         </div>
       </article>
     `;

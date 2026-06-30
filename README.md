@@ -41,6 +41,7 @@
 
 - `embedUrl`: YouTube watch, shorts, youtu.be, embed URL 또는 일반 iframe URL
 - `image`: 제품 이미지 URL, 비워두면 이미지 없는 카드로 표시
+- `productUrl`: CTA 클릭 시 이동할 제품 페이지 URL
 - `brand`: 브랜드명
 - `title`: 카드 제목
 - `description`: 카드 설명
