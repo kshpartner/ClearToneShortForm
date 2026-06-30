@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ClearTone ShortForm</title>
+    <meta name="description" content="ClearTone 숏폼 영상과 제품 카드를 iframe으로 공유하는 페이지">
+    <link rel="stylesheet" href="./css/styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html" aria-label="ClearTone ShortForm">
+        <span class="brand-mark"></span>
+        <span>ClearTone ShortForm</span>
+      </a>
+      <nav class="nav-links" aria-label="주요 링크">
+        <a href="#shortforms">숏폼</a>
+        <a href="#embed">임베드</a>
+        <a href="./embed.html?item=original">샘플</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">CLEAR TONE SHARE KIT</p>
+          <h1>숏폼 영상과 제품 카드를 한 번에 공유하세요.</h1>
+          <p>
+            YouTube 세로 영상 위에 구매 카드가 붙은 임베드 페이지입니다.
+            외부 블로그, 상세페이지, 커뮤니티 페이지에 iframe 코드만 넣으면 됩니다.
+          </p>
+        </div>
+        <div class="hero-preview" aria-label="대표 임베드 미리보기">
+          <iframe
+            id="heroFrame"
+            title="ClearTone 임베드 미리보기"
+            src="./embed.html?item=original&preview=1"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+          </iframe>
+        </div>
+      </section>
+
+      <section class="section" id="shortforms">
+        <div class="section-heading">
+          <p class="eyebrow">SHORTFORM LIBRARY</p>
+          <h2>공유할 숏폼 선택</h2>
+        </div>
+        <div class="shortform-grid" id="shortformGrid"></div>
+      </section>
+
+      <section class="section embed-section" id="embed">
+        <div class="section-heading">
+          <p class="eyebrow">IFRAME CODE</p>
+          <h2>외부에 붙일 코드</h2>
+        </div>
+        <div class="embed-tools">
+          <label>
+            공유할 숏폼
+            <select id="itemSelect"></select>
+          </label>
+          <label>
+            너비
+            <input id="embedWidth" type="number" min="280" max="720" step="10" value="360">
+          </label>
+          <label>
+            높이
+            <input id="embedHeight" type="number" min="480" max="1200" step="10" value="640">
+          </label>
+          <button class="button" id="copyButton" type="button">코드 복사</button>
+        </div>
+        <textarea id="embedCode" readonly spellcheck="false" aria-label="iframe 코드"></textarea>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>ClearTone ShortForm</span>
+      <span>Static iframe share kit</span>
+    </footer>
+
+    <script src="./js/data.js"></script>
+    <script src="./js/app.js"></script>
+  </body>
+</html>
