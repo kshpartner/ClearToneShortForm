@@ -455,7 +455,7 @@ textarea {
 }
 
 .story-copy span {
-  color: var(--orange);
+  color: #E96753;
   font-size: 10px;
   font-weight: 900;
   overflow: hidden;
