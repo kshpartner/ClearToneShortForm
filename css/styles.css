@@ -304,7 +304,7 @@ textarea {
   overflow-x: auto;
   overflow-y: hidden;
   overscroll-behavior-x: contain;
-  padding: 2px 44px 12px;
+  padding: 2px 2px 12px;
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
@@ -331,38 +331,6 @@ textarea {
   overflow: hidden;
   position: relative;
   scroll-snap-align: start;
-}
-
-.rail-button {
-  align-items: center;
-  background: rgba(17, 17, 17, 0.84);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 999px;
-  color: #fff;
-  cursor: pointer;
-  display: flex;
-  font-size: 30px;
-  font-weight: 700;
-  height: 42px;
-  justify-content: center;
-  line-height: 1;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 42px;
-  z-index: 5;
-}
-
-.rail-button-prev {
-  left: 0;
-}
-
-.rail-button-next {
-  right: 0;
-}
-
-.rail-button:hover {
-  background: var(--orange);
 }
 
 .story-media,
@@ -794,10 +762,6 @@ textarea {
     padding: 2px 2px 8px;
     scroll-snap-type: x mandatory;
     width: 100%;
-  }
-
-  .rail-button {
-    display: none;
   }
 
   .story-card {

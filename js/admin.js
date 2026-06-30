@@ -19,7 +19,7 @@
   const previewFrame = document.querySelector("#previewFrame");
   const previewStage = document.querySelector("#previewStage");
   const ADMIN_CACHE_KEY = "clearToneShortformAdminState:v1";
-  const ASSET_VERSION = "20260630-pc-drag";
+  const ASSET_VERSION = "20260630-drag-only";
   const buttons = {
     load: document.querySelector("#loadButton"),
     save: document.querySelector("#saveButton"),
