@@ -403,14 +403,14 @@ textarea {
 .story-copy {
   align-content: center;
   display: grid;
-  gap: 5px;
+  gap: 4px;
   min-width: 0;
-  padding: 13px 14px 12px;
+  padding: 12px 13px 11px;
 }
 
 .story-copy span {
   color: var(--blue);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 900;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -419,16 +419,16 @@ textarea {
 }
 
 .story-copy strong {
-  font-size: clamp(15px, 3.6vw, 20px);
-  line-height: 1.2;
+  font-size: clamp(14px, 2.4vw, 18px);
+  line-height: 1.16;
   overflow-wrap: anywhere;
 }
 
 .story-copy p {
   color: #3b414d;
   display: -webkit-box;
-  font-size: clamp(11px, 2.8vw, 13px);
-  line-height: 1.42;
+  font-size: clamp(10.5px, 1.8vw, 12.5px);
+  line-height: 1.36;
   margin: 0;
   overflow: hidden;
   -webkit-box-orient: vertical;
@@ -440,11 +440,11 @@ textarea {
   background: var(--deep);
   color: #fff;
   display: flex;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 900;
   gap: 6px;
   justify-content: center;
-  min-height: 42px;
+  min-height: 40px;
   padding: 0 14px;
 }
 
@@ -757,27 +757,27 @@ textarea {
   }
 
   .story-copy {
-    gap: 3px;
-    padding: 9px 9px 8px;
+    gap: 2px;
+    padding: 8px 8px 7px;
   }
 
   .story-copy span {
-    font-size: 9px;
+    font-size: 8.5px;
   }
 
   .story-copy strong {
-    font-size: 14px;
-    line-height: 1.14;
+    font-size: 12.5px;
+    line-height: 1.12;
   }
 
   .story-copy p {
-    font-size: 10.5px;
-    line-height: 1.34;
+    font-size: 9.5px;
+    line-height: 1.28;
   }
 
   .story-cta {
-    font-size: 12px;
-    min-height: 34px;
+    font-size: 10.5px;
+    min-height: 31px;
   }
 
   .admin-main {
