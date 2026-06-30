@@ -2,8 +2,9 @@
   const items = window.CLEAR_TONE_SHORTFORMS || [];
   const page = document.querySelector("#embedPage");
   const params = new URLSearchParams(window.location.search);
-  const autoplay = params.get("autoplay") === "1";
+  const autoplay = params.get("autoplay") !== "0";
   const preview = params.get("preview") === "1";
+  const loop = params.get("loop") !== "0";
 
   if (!items.length) {
     page.innerHTML = '<div class="embed-empty">등록된 숏폼이 없습니다.</div>';
@@ -23,7 +24,7 @@
   `;
 
   function renderCard(item, index) {
-    const source = normalizeEmbedUrl(item.embedUrl, autoplay && !preview);
+    const source = normalizeEmbedUrl(item.embedUrl, autoplay && !preview, loop);
     const hasImage = Boolean((item.image || "").trim());
 
     return `
@@ -56,7 +57,7 @@
     `;
   }
 
-  function normalizeEmbedUrl(value, shouldAutoplay) {
+  function normalizeEmbedUrl(value, shouldAutoplay, shouldLoop) {
     const raw = String(value || "").trim();
     if (!raw) return "";
 
@@ -80,13 +81,26 @@
         embed.searchParams.set("playsinline", "1");
         embed.searchParams.set("rel", "0");
         embed.searchParams.set("modestbranding", "1");
+        embed.searchParams.set("controls", "0");
         if (shouldAutoplay) {
           embed.searchParams.set("autoplay", "1");
           embed.searchParams.set("mute", "1");
         }
+        if (shouldLoop) {
+          embed.searchParams.set("loop", "1");
+          embed.searchParams.set("playlist", videoId);
+        }
         return embed.href;
       }
 
+      if (shouldAutoplay) {
+        url.searchParams.set("autoplay", "1");
+        url.searchParams.set("mute", "1");
+        url.searchParams.set("muted", "1");
+      }
+      if (shouldLoop) {
+        url.searchParams.set("loop", "1");
+      }
       return url.href;
     } catch (error) {
       return raw;
