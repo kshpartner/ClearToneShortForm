@@ -1,36 +1,45 @@
 # ClearTone ShortForm
 
-ClearTone 숏폼 영상과 제품 카드를 외부 사이트에 iframe으로 붙이기 위한 정적 공유 페이지입니다. GitHub Pages, Netlify, Vercel 같은 정적 호스팅에 그대로 올릴 수 있습니다.
+여러 숏폼 영상과 제품 카드를 하나의 반응형 iframe 페이지로 공유하는 GitHub Pages용 정적 프로젝트입니다.
 
-## 사용 방법
+## 공개 페이지
 
-1. `js/data.js`에서 YouTube 영상 ID, 제품명, 설명, 링크, 이미지 URL을 수정합니다.
-2. `index.html`을 열어 카드 미리보기와 iframe 코드를 확인합니다.
-3. 외부 사이트에는 아래 형식으로 붙입니다.
+- 홈: https://kshpartner.github.io/ClearToneShortForm/
+- iframe 페이지: https://kshpartner.github.io/ClearToneShortForm/embed.html
+- 관리자: https://kshpartner.github.io/ClearToneShortForm/admin.html
+
+## 외부 사이트에 붙이는 코드
 
 ```html
 <iframe
-  src="https://YOUR_GITHUB_ID.github.io/ClearToneShortForm/embed.html?item=original"
-  width="360"
-  height="640"
-  style="border:0;border-radius:24px;overflow:hidden"
+  src="https://kshpartner.github.io/ClearToneShortForm/embed.html"
+  width="100%"
+  height="720"
+  style="border:0;border-radius:18px;overflow:hidden;width:100%;max-width:100%"
   loading="lazy"
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
   allowfullscreen>
 </iframe>
 ```
 
-## 데이터 수정
+## 관리자 사용
 
-`js/data.js`의 각 항목에서 아래 값을 바꾸면 됩니다.
+`admin.html`에서 아래 값을 입력하고 카드를 추가/수정/삭제한 뒤 `GitHub에 저장`을 누르면 `js/data.js`가 업데이트됩니다.
 
-- `id`: iframe URL에 들어가는 고유 값
-- `youtubeId`: YouTube 영상 ID
-- `brand`, `title`, `description`: 하단 제품 카드 문구
-- `productUrl`: 제품 카드 클릭 시 이동할 주소
-- `image`: 하단 카드에 표시할 이미지 주소
+- GitHub Token: repo 쓰기 권한이 있는 토큰
+- 저장소: `kshpartner/ClearToneShortForm`
+- 브랜치: `main`
+- 데이터 파일: `js/data.js`
 
-## GitHub Pages
+토큰은 브라우저 세션에만 저장되며 저장소 파일에는 기록되지 않습니다.
 
-저장소를 GitHub에 올린 뒤 Settings > Pages에서 `main` 브랜치의 root를 배포 대상으로 선택하면 됩니다.
+## 카드 데이터
+
+각 카드에는 아래 값이 들어갑니다.
+
+- `embedUrl`: YouTube watch, shorts, youtu.be, embed URL 또는 일반 iframe URL
+- `image`: 제품 이미지 URL, 비워두면 이미지 없는 카드로 표시
+- `brand`: 브랜드명
+- `title`: 카드 제목
+- `description`: 카드 설명
 

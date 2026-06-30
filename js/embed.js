@@ -1,48 +1,97 @@
 (function () {
   const items = window.CLEAR_TONE_SHORTFORMS || [];
+  const page = document.querySelector("#embedPage");
   const params = new URLSearchParams(window.location.search);
-  const requestedId = params.get("item") || items[0]?.id;
-  const item = items.find((entry) => entry.id === requestedId) || items[0];
-  const shell = document.querySelector("#embedShell");
+  const autoplay = params.get("autoplay") === "1";
+  const preview = params.get("preview") === "1";
 
-  if (!item) {
-    shell.innerHTML = '<div class="embed-error">표시할 숏폼 데이터가 없습니다.</div>';
+  if (!items.length) {
+    page.innerHTML = '<div class="embed-empty">등록된 숏폼이 없습니다.</div>';
     return;
   }
 
-  const validYoutubeId = /^[a-zA-Z0-9_-]{11}$/.test(item.youtubeId || "");
-  const preview = params.get("preview") === "1";
-  const autoplay = params.get("autoplay") === "1" && !preview;
-  const videoUrl = validYoutubeId
-    ? `https://www.youtube-nocookie.com/embed/${item.youtubeId}?playsinline=1&rel=0&modestbranding=1&autoplay=${autoplay ? "1" : "0"}&mute=${autoplay ? "1" : "0"}`
-    : "";
-
-  shell.innerHTML = `
-    <section class="video-stage" aria-label="${escapeHtml(item.brand)} 숏폼 영상">
-      ${validYoutubeId ? `
-        <iframe
-          title="${escapeHtml(item.brand)} YouTube 영상"
-          src="${videoUrl}"
-          loading="lazy"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen>
-        </iframe>
-      ` : `
-        <div class="fallback-poster">
-          <strong>${escapeHtml(item.brand)}<br>${escapeHtml(item.title)}</strong>
-        </div>
-      `}
-    </section>
-    <div class="embed-gradient"></div>
-    <a class="product-card" href="${escapeAttr(item.productUrl)}" target="_blank" rel="noopener">
-      <img src="${escapeAttr(item.image)}" alt="">
-      <div class="product-copy">
-        <span>${escapeHtml(item.brand)}</span>
-        <strong>${escapeHtml(item.title)}</strong>
-        <p>${escapeHtml(item.description)}</p>
+  page.innerHTML = `
+    <section class="embed-board" aria-label="ClearTone 숏폼 모음">
+      <div class="embed-board-head">
+        <p>ClearTone ShortForm</p>
+        <span>${items.length} videos</span>
       </div>
-    </a>
+      <div class="shortform-rail">
+        ${items.map(renderCard).join("")}
+      </div>
+    </section>
   `;
+
+  function renderCard(item, index) {
+    const source = normalizeEmbedUrl(item.embedUrl, autoplay && !preview);
+    const hasImage = Boolean((item.image || "").trim());
+
+    return `
+      <article class="story-card">
+        <div class="story-media">
+          ${source ? `
+            <iframe
+              title="${escapeHtml(item.brand || "ClearTone")} ${index + 1}"
+              src="${escapeAttr(source)}"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          ` : `
+            <div class="fallback-poster">
+              <strong>${escapeHtml(item.brand || "ClearTone")}<br>${escapeHtml(item.title || "ShortForm")}</strong>
+            </div>
+          `}
+        </div>
+        <div class="story-shade"></div>
+        <div class="story-product ${hasImage ? "" : "no-image"}">
+          ${hasImage ? `<img src="${escapeAttr(item.image)}" alt="">` : ""}
+          <div class="story-copy">
+            <span>${escapeHtml(item.brand || "ClearTone")}</span>
+            <strong>${escapeHtml(item.title || "")}</strong>
+            <p>${escapeHtml(item.description || "")}</p>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  function normalizeEmbedUrl(value, shouldAutoplay) {
+    const raw = String(value || "").trim();
+    if (!raw) return "";
+
+    try {
+      const url = new URL(raw);
+      const host = url.hostname.replace(/^www\./, "");
+      let videoId = "";
+
+      if (host === "youtu.be") {
+        videoId = url.pathname.split("/").filter(Boolean)[0] || "";
+      }
+
+      if (host === "youtube.com" || host === "youtube-nocookie.com") {
+        const parts = url.pathname.split("/").filter(Boolean);
+        if (url.pathname === "/watch") videoId = url.searchParams.get("v") || "";
+        if (parts[0] === "shorts" || parts[0] === "embed") videoId = parts[1] || "";
+      }
+
+      if (/^[a-zA-Z0-9_-]{11}$/.test(videoId)) {
+        const embed = new URL(`https://www.youtube-nocookie.com/embed/${videoId}`);
+        embed.searchParams.set("playsinline", "1");
+        embed.searchParams.set("rel", "0");
+        embed.searchParams.set("modestbranding", "1");
+        if (shouldAutoplay) {
+          embed.searchParams.set("autoplay", "1");
+          embed.searchParams.set("mute", "1");
+        }
+        return embed.href;
+      }
+
+      return url.href;
+    } catch (error) {
+      return raw;
+    }
+  }
 
   function escapeHtml(value) {
     return String(value || "")
