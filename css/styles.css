@@ -307,7 +307,7 @@ textarea {
   padding: 2px 44px 12px;
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
-  scrollbar-width: thin;
+  scrollbar-width: none;
   touch-action: pan-x;
   user-select: none;
 }
@@ -318,12 +318,7 @@ textarea {
 }
 
 .shortform-rail::-webkit-scrollbar {
-  height: 8px;
-}
-
-.shortform-rail::-webkit-scrollbar-thumb {
-  background: rgba(29, 36, 48, 0.22);
-  border-radius: 999px;
+  display: none;
 }
 
 .story-card {

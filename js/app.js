@@ -3,7 +3,7 @@
   const heightInput = document.querySelector("#embedHeight");
   const codeOutput = document.querySelector("#embedCode");
   const copyButton = document.querySelector("#copyButton");
-  const ASSET_VERSION = "20260630-rail-controls";
+  const ASSET_VERSION = "20260630-no-scrollbar";
 
   function embedUrl() {
     const url = new URL("./embed.html", window.location.href);
