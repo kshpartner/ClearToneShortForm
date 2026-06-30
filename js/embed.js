@@ -17,11 +17,17 @@
         <p>ClearTone ShortForm</p>
         <span>${items.length} videos</span>
       </div>
-      <div class="shortform-rail">
-        ${items.map(renderCard).join("")}
+      <div class="shortform-shell">
+        <button class="rail-button rail-button-prev" type="button" aria-label="이전 숏폼 보기">‹</button>
+        <div class="shortform-rail" tabindex="0">
+          ${items.map(renderCard).join("")}
+        </div>
+        <button class="rail-button rail-button-next" type="button" aria-label="다음 숏폼 보기">›</button>
       </div>
     </section>
   `;
+
+  setupRailControls();
 
   function renderCard(item, index) {
     const source = normalizeEmbedUrl(item.embedUrl, autoplay && !preview, loop);
@@ -65,6 +71,56 @@
         </div>
       </article>
     `;
+  }
+
+  function setupRailControls() {
+    const rail = page.querySelector(".shortform-rail");
+    const prev = page.querySelector(".rail-button-prev");
+    const next = page.querySelector(".rail-button-next");
+    if (!rail || !prev || !next) return;
+
+    const scrollByPage = (direction) => {
+      const firstCard = rail.querySelector(".story-card");
+      const cardWidth = firstCard ? firstCard.getBoundingClientRect().width : rail.clientWidth * 0.8;
+      rail.scrollBy({
+        left: direction * Math.max(cardWidth + 22, rail.clientWidth * 0.66),
+        behavior: "smooth"
+      });
+    };
+
+    prev.addEventListener("click", () => scrollByPage(-1));
+    next.addEventListener("click", () => scrollByPage(1));
+
+    let isDragging = false;
+    let startX = 0;
+    let startScrollLeft = 0;
+
+    rail.addEventListener("pointerdown", (event) => {
+      if (event.pointerType === "touch") return;
+      isDragging = true;
+      startX = event.clientX;
+      startScrollLeft = rail.scrollLeft;
+      rail.classList.add("is-dragging");
+      rail.setPointerCapture(event.pointerId);
+    });
+
+    rail.addEventListener("pointermove", (event) => {
+      if (!isDragging) return;
+      rail.scrollLeft = startScrollLeft - (event.clientX - startX);
+    });
+
+    rail.addEventListener("pointerup", (event) => {
+      isDragging = false;
+      rail.classList.remove("is-dragging");
+      if (rail.hasPointerCapture(event.pointerId)) {
+        rail.releasePointerCapture(event.pointerId);
+      }
+    });
+
+    rail.addEventListener("pointercancel", () => {
+      isDragging = false;
+      rail.classList.remove("is-dragging");
+    });
   }
 
   function normalizeEmbedUrl(value, shouldAutoplay, shouldLoop) {

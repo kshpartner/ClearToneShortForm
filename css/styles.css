@@ -287,8 +287,14 @@ textarea {
   text-transform: uppercase;
 }
 
+.shortform-shell {
+  min-width: 0;
+  position: relative;
+}
+
 .shortform-rail {
   align-content: stretch;
+  cursor: grab;
   display: grid;
   gap: clamp(14px, 2vw, 22px);
   grid-auto-columns: clamp(260px, 30vw, 372px);
@@ -296,10 +302,19 @@ textarea {
   min-width: 0;
   min-height: 0;
   overflow-x: auto;
+  overflow-y: hidden;
   overscroll-behavior-x: contain;
-  padding: 2px 2px 12px;
+  padding: 2px 44px 12px;
+  scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
   scrollbar-width: thin;
+  touch-action: pan-x;
+  user-select: none;
+}
+
+.shortform-rail.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
 }
 
 .shortform-rail::-webkit-scrollbar {
@@ -321,6 +336,38 @@ textarea {
   overflow: hidden;
   position: relative;
   scroll-snap-align: start;
+}
+
+.rail-button {
+  align-items: center;
+  background: rgba(17, 17, 17, 0.84);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  font-size: 30px;
+  font-weight: 700;
+  height: 42px;
+  justify-content: center;
+  line-height: 1;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  z-index: 5;
+}
+
+.rail-button-prev {
+  left: 0;
+}
+
+.rail-button-next {
+  right: 0;
+}
+
+.rail-button:hover {
+  background: var(--orange);
 }
 
 .story-media,
@@ -732,22 +779,25 @@ textarea {
 
   .shortform-rail {
     align-content: start;
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
     gap: 12px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    padding-bottom: 8px;
-    scroll-snap-type: none;
+    grid-auto-columns: calc((100% - 12px) / 2);
+    grid-auto-flow: column;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 2px 2px 8px;
+    scroll-snap-type: x mandatory;
     width: 100%;
+  }
+
+  .rail-button {
+    display: none;
   }
 
   .story-card {
     border-radius: 18px;
-    flex: 0 0 calc((100% - 12px) / 2);
     min-width: 0;
-    scroll-snap-align: none;
-    width: calc((100% - 12px) / 2);
+    scroll-snap-align: start;
   }
 
   .story-product {
