@@ -3,7 +3,7 @@
   const heightInput = document.querySelector("#embedHeight");
   const codeOutput = document.querySelector("#embedCode");
   const copyButton = document.querySelector("#copyButton");
-  const ASSET_VERSION = "20260630-brand-color";
+  const ASSET_VERSION = "20260630-pc-drag";
 
   function embedUrl() {
     const url = new URL("./embed.html", window.location.href);

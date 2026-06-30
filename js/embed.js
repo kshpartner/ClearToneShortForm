@@ -53,6 +53,7 @@
           `}
         </div>
         <div class="story-shade"></div>
+        <div class="story-drag-cover" aria-hidden="true"></div>
         <div class="story-product">
           <div class="story-product-main ${hasImage ? "" : "no-image"}">
             ${hasImage ? `<div class="story-thumb"><img src="${escapeAttr(imageSource)}" alt=""></div>` : ""}

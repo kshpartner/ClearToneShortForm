@@ -402,6 +402,16 @@ textarea {
   position: absolute;
 }
 
+.story-drag-cover {
+  cursor: grab;
+  inset: 0;
+  position: absolute;
+}
+
+.shortform-rail.is-dragging .story-drag-cover {
+  cursor: grabbing;
+}
+
 .story-product {
   background: rgba(255, 255, 255, 0.96);
   border: 1px solid rgba(244, 123, 32, 0.18);
@@ -415,6 +425,7 @@ textarea {
   overflow: hidden;
   position: absolute;
   right: 12px;
+  z-index: 1;
 }
 
 .story-product-main {
