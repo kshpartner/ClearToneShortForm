@@ -3,9 +3,12 @@
   const heightInput = document.querySelector("#embedHeight");
   const codeOutput = document.querySelector("#embedCode");
   const copyButton = document.querySelector("#copyButton");
+  const ASSET_VERSION = "20260630-title-compact";
 
   function embedUrl() {
-    return new URL("./embed.html", window.location.href).href;
+    const url = new URL("./embed.html", window.location.href);
+    url.searchParams.set("v", ASSET_VERSION);
+    return url.href;
   }
 
   function renderCode() {

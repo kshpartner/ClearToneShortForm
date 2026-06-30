@@ -423,8 +423,10 @@ textarea {
 }
 
 .story-copy strong {
-  font-size: clamp(14px, 2.4vw, 18px);
-  line-height: 1.16;
+  display: block;
+  font-size: clamp(10.8px, 1.65vw, 13px);
+  font-weight: 800;
+  line-height: 1.14;
   overflow-wrap: anywhere;
 }
 
@@ -770,7 +772,7 @@ textarea {
   }
 
   .story-copy strong {
-    font-size: 12.5px;
+    font-size: 9.8px;
     line-height: 1.12;
   }
 

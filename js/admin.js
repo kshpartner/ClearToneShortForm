@@ -18,6 +18,8 @@
   const statusText = document.querySelector("#statusText");
   const previewFrame = document.querySelector("#previewFrame");
   const previewStage = document.querySelector("#previewStage");
+  const ADMIN_CACHE_KEY = "clearToneShortformAdminState:v1";
+  const ASSET_VERSION = "20260630-title-compact";
   const buttons = {
     load: document.querySelector("#loadButton"),
     save: document.querySelector("#saveButton"),
@@ -30,9 +32,11 @@
     mobile: document.querySelector("#mobilePreviewButton")
   };
 
-  let items = clone(window.CLEAR_TONE_SHORTFORMS || []);
-  let products = clone(window.CLEAR_TONE_PRODUCTS || []);
-  let selectedIndex = 0;
+  const cachedState = readCachedState();
+  let items = clone(cachedState?.items || window.CLEAR_TONE_SHORTFORMS || []);
+  let products = clone(cachedState?.products || window.CLEAR_TONE_PRODUCTS || []);
+  let selectedIndex = cachedState?.selectedIndex || 0;
+  selectedIndex = Math.min(Math.max(selectedIndex, 0), Math.max(items.length - 1, 0));
   let dataSha = "";
   let manifestSha = "";
 
@@ -48,6 +52,33 @@
 
   function selectedItem() {
     return items[selectedIndex] || null;
+  }
+
+  function readCachedState() {
+    try {
+      const cached = JSON.parse(localStorage.getItem(ADMIN_CACHE_KEY) || "null");
+      if (!cached || !Array.isArray(cached.items)) return null;
+      return {
+        items: cached.items,
+        products: Array.isArray(cached.products) ? cached.products : [],
+        selectedIndex: Number.isInteger(cached.selectedIndex) ? cached.selectedIndex : 0
+      };
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function persistAdminState() {
+    try {
+      localStorage.setItem(ADMIN_CACHE_KEY, JSON.stringify({
+        items,
+        products,
+        selectedIndex,
+        updatedAt: new Date().toISOString()
+      }));
+    } catch (error) {
+      // Storage can be unavailable in private browsing or strict browser modes.
+    }
   }
 
   function renderProducts() {
@@ -101,6 +132,7 @@
     };
     renderList();
     refreshPreview();
+    persistAdminState();
     setStatus("현재 카드가 반영되었습니다. 공개 페이지 반영은 GitHub에 저장해야 합니다.");
   }
 
@@ -118,6 +150,7 @@
     selectedIndex = items.length - 1;
     renderList();
     renderForm();
+    persistAdminState();
     setStatus("새 카드를 추가했습니다.");
   }
 
@@ -128,6 +161,7 @@
     renderList();
     renderForm();
     refreshPreview();
+    persistAdminState();
     setStatus("선택한 카드를 삭제했습니다. 공개 페이지 반영은 GitHub에 저장해야 합니다.");
   }
 
@@ -151,6 +185,7 @@
     renderList();
     renderForm();
     refreshPreview();
+    persistAdminState();
     setStatus("GitHub에서 최신 데이터를 불러왔습니다.");
   }
 
@@ -177,6 +212,7 @@
     );
 
     dataSha = result.content.sha;
+    persistAdminState();
     setStatus("GitHub에 저장했습니다. Pages 반영까지 잠시 걸릴 수 있습니다.");
   }
 
@@ -323,7 +359,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <base href="${baseHref}">
-  <link rel="stylesheet" href="./css/styles.css">
+  <link rel="stylesheet" href="./css/styles.css?v=${ASSET_VERSION}">
 </head>
 <body class="embed-body">
   <main class="embed-page" id="embedPage"></main>
@@ -390,6 +426,7 @@
     selectedIndex = Number(row.dataset.index);
     renderList();
     renderForm();
+    persistAdminState();
   });
 
   fields.image.addEventListener("change", applyForm);
@@ -430,4 +467,8 @@
   renderList();
   renderForm();
   refreshPreview();
+  persistAdminState();
+  if (cachedState) {
+    setStatus("최근 편집본을 복원했습니다. GitHub 최신본은 GitHub에서 불러오기로 확인할 수 있습니다.");
+  }
 }());
