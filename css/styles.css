@@ -3,13 +3,16 @@
   --muted: #667085;
   --line: #e4e7ec;
   --paper: #ffffff;
-  --soft: #f7f9fc;
-  --blue: #2563eb;
-  --green: #0e9f8f;
-  --yellow: #f4c84f;
-  --pink: #f5b4c9;
-  --shadow: 0 18px 42px rgba(23, 25, 31, 0.12);
-  --deep: #101318;
+  --soft: #f7fbff;
+  --blue: #f47b20;
+  --green: #ffb347;
+  --yellow: #ffd35a;
+  --pink: #fff1e6;
+  --orange: #f47b20;
+  --orange-dark: #d95f00;
+  --sky: #eaf4fb;
+  --shadow: 0 18px 42px rgba(40, 24, 12, 0.14);
+  --deep: #111111;
 }
 
 * {
@@ -62,7 +65,7 @@ textarea {
 }
 
 .brand-mark {
-  background: linear-gradient(135deg, var(--blue), var(--green));
+  background: linear-gradient(135deg, var(--orange), var(--green));
   border-radius: 5px;
   display: inline-block;
   height: 18px;
@@ -154,7 +157,7 @@ h2 {
 
 .button {
   align-items: center;
-  background: var(--ink);
+  background: var(--deep);
   border: 0;
   border-radius: 8px;
   color: #fff;
@@ -167,7 +170,7 @@ h2 {
 }
 
 .button.secondary {
-  background: var(--soft);
+  background: #fff3e9;
   color: var(--ink);
 }
 
@@ -243,8 +246,8 @@ textarea {
 
 .embed-page {
   background:
-    radial-gradient(circle at 8% 12%, rgba(37, 99, 235, 0.12), transparent 28%),
-    linear-gradient(135deg, #f7f9fc 0%, #eef3f8 45%, #f8fbfa 100%);
+    linear-gradient(90deg, rgba(234, 244, 251, 0.92) 0%, rgba(255, 255, 255, 0.84) 18%, rgba(255, 243, 233, 0.9) 50%, rgba(255, 255, 255, 0.84) 82%, rgba(234, 244, 251, 0.92) 100%),
+    #f7fbff;
   min-height: 100vh;
   overflow: hidden;
   width: 100vw;
@@ -259,7 +262,7 @@ textarea {
 
 .embed-board-head {
   align-items: center;
-  color: #1d2430;
+  color: #151515;
   display: flex;
   justify-content: space-between;
   min-height: 28px;
@@ -272,7 +275,8 @@ textarea {
 }
 
 .embed-board-head p {
-  font-size: clamp(14px, 2vw, 17px);
+  color: var(--orange);
+  font-size: clamp(15px, 2vw, 18px);
   font-weight: 900;
 }
 
@@ -312,7 +316,7 @@ textarea {
   background: var(--deep);
   border: 1px solid rgba(255, 255, 255, 0.34);
   border-radius: 26px;
-  box-shadow: 0 22px 52px rgba(20, 24, 32, 0.2);
+  box-shadow: 0 22px 52px rgba(42, 25, 8, 0.2);
   min-height: 0;
   overflow: hidden;
   position: relative;
@@ -335,7 +339,7 @@ textarea {
 
 .fallback-poster {
   align-items: center;
-  background: linear-gradient(155deg, #eaf5ff 0%, #fff4db 48%, #fde7ef 100%);
+  background: linear-gradient(155deg, #eaf4fb 0%, #fff7ee 48%, #ffe2c9 100%);
   color: var(--ink);
   display: flex;
   justify-content: center;
@@ -357,11 +361,11 @@ textarea {
 }
 
 .story-product {
-  background: rgba(255, 255, 255, 0.94);
-  border: 1px solid rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(244, 123, 32, 0.18);
   border-radius: 20px;
   bottom: 12px;
-  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 18px 34px rgba(72, 34, 4, 0.2);
   color: var(--ink);
   display: grid;
   gap: 0;
@@ -385,7 +389,7 @@ textarea {
 .story-thumb {
   align-items: center;
   aspect-ratio: 1 / 1;
-  background: #fff;
+  background: linear-gradient(135deg, #ffffff 0%, #fff7f0 100%);
   display: flex;
   height: 100%;
   justify-content: center;
@@ -409,7 +413,7 @@ textarea {
 }
 
 .story-copy span {
-  color: var(--blue);
+  color: var(--orange);
   font-size: 10px;
   font-weight: 900;
   overflow: hidden;
@@ -437,7 +441,7 @@ textarea {
 
 .story-cta {
   align-items: center;
-  background: var(--deep);
+  background: var(--orange);
   color: #fff;
   display: flex;
   font-size: 12px;
@@ -464,7 +468,7 @@ textarea {
 }
 
 .admin-main {
-  background: var(--soft);
+  background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
   min-height: calc(100vh - 72px);
   padding: 18px;
 }
@@ -546,8 +550,8 @@ textarea {
 }
 
 .item-row.is-active {
-  border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(47, 110, 234, 0.12);
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(244, 123, 32, 0.14);
 }
 
 .item-row strong {
@@ -584,7 +588,7 @@ textarea {
 }
 
 .admin-preview-panel {
-  background: #e8edf4;
+  background: linear-gradient(135deg, #eaf4fb 0%, #fff7ef 100%);
   border: 1px solid var(--line);
   border-radius: 8px;
   display: grid;
@@ -626,8 +630,8 @@ textarea {
 }
 
 .icon-button.is-active {
-  background: var(--ink);
-  border-color: var(--ink);
+  background: var(--orange);
+  border-color: var(--orange);
   color: #fff;
 }
 
